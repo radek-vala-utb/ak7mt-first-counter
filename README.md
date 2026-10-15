@@ -55,3 +55,7 @@ Pravidla: hodnota neklesá pod nulu, Reset mění pouze hodnotu, do historie se 
 - [DataStore](https://developer.android.com/topic/libraries/architecture/datastore)
 
 Metodická návaznost: AP5PM CV2–CV4. Další repozitář `ap7mt-counter-holidays` přidává REST API a Room.
+
+## Výsledek ověření
+
+Podrobný záznam testů a omezení: [OVERENI.md](OVERENI.md).
