@@ -9,8 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,11 +18,13 @@ class MainActivity : ComponentActivity() {
             MaterialTheme {
                 Surface(Modifier.fillMaxSize().safeDrawingPadding()) {
                     val model: CounterViewModel = viewModel()
-                    CounterScreen(
-                        model.name, model.count, model::rename,
-                        model::increment, model::decrement, model::reset,
-                        Modifier.verticalScroll(rememberScrollState()),
-                    )
+                    LazyColumn {
+                        item {
+                            CounterScreen(model.name, model.count, model::rename, model::increment,
+                                model::decrement, model::reset, onSave = model::save)
+                        }
+                        historyItems(model.history, model::remove)
+                    }
                 }
             }
         }

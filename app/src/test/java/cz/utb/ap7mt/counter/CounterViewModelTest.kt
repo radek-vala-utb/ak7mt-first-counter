@@ -17,4 +17,20 @@ class CounterViewModelTest {
         assertEquals("Návštěvníci", model.name)
         assertEquals(0, model.count)
     }
+
+    @Test fun snapshotsAreIndependentAndRemovedById() {
+        val model = CounterViewModel()
+        model.save()
+        assertTrue(model.history.isEmpty())
+        repeat(2) { model.rename(" Stejný "); model.increment(); model.save() }
+        assertEquals("", model.name)
+        assertEquals(0, model.count)
+        assertEquals(2, model.history.size)
+        assertEquals("Stejný", model.history.first().name)
+        model.increment()
+        assertEquals(1, model.history.first().value)
+        val retained = model.history.last()
+        model.remove(model.history.first().id)
+        assertEquals(listOf(retained), model.history)
+    }
 }

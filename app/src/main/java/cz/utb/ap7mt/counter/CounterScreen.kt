@@ -17,6 +17,7 @@ fun CounterScreen(
     onDecrement: () -> Unit,
     onReset: () -> Unit,
     modifier: Modifier = Modifier,
+    onSave: (() -> Unit)? = null,
 ) {
     Column(modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Text("Počítadlo", style = MaterialTheme.typography.headlineMedium)
@@ -28,6 +29,8 @@ fun CounterScreen(
             Button(onClick = onIncrement, enabled = count < Int.MAX_VALUE) { Text("+1") }
             OutlinedButton(onClick = onReset, enabled = count > 0) { Text("Reset") }
         }
-        
+        if (onSave != null) {
+            Button(onClick = onSave, enabled = name.isNotBlank()) { Text("Uložit do historie") }
+        }
     }
 }
