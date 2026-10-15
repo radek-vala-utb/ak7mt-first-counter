@@ -42,9 +42,10 @@ class CounterViewModel(private val repository: CounterRepository) : ViewModel() 
         mutableUi.update { it.copy(loading = true, error = null) }
         observation = viewModelScope.launch {
             try {
-                repository.state.collect { data ->
-                    mutableUi.update { it.copy(data = data, loading = false) }
-                }
+                // Load once. While editing, the ViewModel owns the live UI state;
+                // delayed disk emissions must not move the text cursor backwards.
+                val data = repository.state.first()
+                mutableUi.update { it.copy(data = data, loading = false) }
             } catch (cancelled: CancellationException) {
                 throw cancelled
             } catch (_: Exception) {
@@ -53,7 +54,10 @@ class CounterViewModel(private val repository: CounterRepository) : ViewModel() 
         }
     }
     private fun change(transform: (CounterState) -> CounterState) {
-        if (!ui.value.loading && ui.value.error == null) operations.trySend(transform)
+        if (!ui.value.loading && ui.value.error == null) {
+            mutableUi.update { it.copy(data = transform(it.data)) }
+            operations.trySend(transform)
+        }
     }
     fun rename(name: String) = change { it.copy(name = name) }
     fun increment() = change { it.increment() }

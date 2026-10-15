@@ -23,7 +23,7 @@ Kotlin soubory jsou v `app/src/main/java/cz/utb/ap7mt/counter/`: CounterReposito
 
 4. Předávejte repository do ViewModelu přes factory. UI sbírá stav pomocí collectAsStateWithLifecycle. Nejprve ukažte načítání, nikoliv zapisovatelný prázdný formulář.
 
-5. Operace zpracujte v pořadí přes Channel ve viewModelScope. Při chybě zápisu ukažte chybu, přerušte čekající operace a umožněte opětovné načtení. Poškozený JSON neignorujte ani nepřepisujte.
+5. Po prvním načtení vlastní živý stav ViewModel: UI aktualizujte ihned, aby pomalý disk nevracel starší text do vstupního pole. Stejné operace zapisujte v pořadí přes Channel ve viewModelScope. Při chybě zápisu ukažte chybu, přerušte čekající operace a umožněte opětovné načtení. Poškozený JSON neignorujte ani nepřepisujte.
 
 6. Přidejte test obnovy přes novou instanci DataStore po uzavření původní a test JSON s nestandardními znaky.
 
